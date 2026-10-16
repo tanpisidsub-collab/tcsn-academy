@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function owner() {
+      return signedIn() && request.auth.uid == "REPLACE_WITH_YOUR_FIREBASE_UID";
+    }
+
+    match /users/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == "member";
+      allow read: if signedIn() && (request.auth.uid == uid || owner());
+      allow update: if owner() ||
+                    (signedIn() && request.auth.uid == uid
+                     && request.resource.data.role == resource.data.role);
+      allow delete: if owner();
+    }
+
+    match /quizzes/{quizId} {
+      allow read: if resource.data.published == true || signedIn();
+      allow create, update, delete: if owner();
+    }
+
+    match /examAttempts/{attemptId} {
+      allow create: if signedIn()
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasAll([
+                      "uid", "quizId", "quizTitle", "percent", "passed", "status"
+                    ]);
+      allow read: if owner() || (signedIn() && resource.data.uid == request.auth.uid)
+                  || resource.data.certCode != null;
+      allow update, delete: if owner();
+    }
+  }
+}

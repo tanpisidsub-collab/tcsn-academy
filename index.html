@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TCSN | แบบทดสอบและเกียรติบัตร</title>
+<style>
+:root{--bg:#070b12;--panel:#101827;--line:#233349;--cyan:#00f0c8;--text:#eef5ff;--muted:#9aabc2;--red:#ff647c;--green:#60e6a8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{position:sticky;top:0;background:#080e18f2;border-bottom:1px solid var(--line);z-index:5;padding:14px 4%;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:1px;color:var(--cyan);font-size:1.25rem}.brand small{display:block;color:var(--muted);font-size:.7rem;letter-spacing:.5px}
+nav{display:flex;gap:7px;flex-wrap:wrap}button,.btn{border:1px solid var(--line);background:#142033;color:var(--text);border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:650}button:hover,.btn:hover{border-color:var(--cyan)}button.primary{background:var(--cyan);color:#03120f;border-color:var(--cyan)}button.danger{border-color:var(--red);color:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
+main{max-width:1100px;margin:26px auto;padding:0 16px 50px}.hero,.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:16px}.hero{background:linear-gradient(130deg,#101827,#0b2630)}h1,h2,h3{margin-top:0}h1{font-size:clamp(1.6rem,4vw,2.5rem)}p{line-height:1.65}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.hidden{display:none!important}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0;flex:1;min-width:180px}input,textarea,select{background:#080f1a;border:1px solid var(--line);border-radius:9px;padding:11px;color:var(--text);font:inherit;width:100%}textarea{min-height:95px;resize:vertical}.pill{display:inline-block;padding:4px 9px;border-radius:999px;background:#0a3935;color:var(--cyan);font-size:.8rem}.status{padding:12px;border:1px solid var(--line);border-radius:10px;margin:12px 0;white-space:pre-wrap}.status.error{border-color:var(--red);color:var(--red)}.status.ok{border-color:var(--green);color:var(--green)}.quiz-option{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;cursor:pointer}.quiz-option input{width:auto;margin-top:5px}.timer{font-size:1.2rem;color:var(--cyan);font-weight:800}.question{border-bottom:1px solid var(--line);padding:14px 0}.small{font-size:.88rem}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}footer{text-align:center;color:var(--muted);padding:20px}
+@media(max-width:650px){header{align-items:flex-start}nav{width:100%}nav button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">TCSN <small>THAI CYBER SECURITY NORMAL</small></div>
+  <nav>
+    <button data-view="home">หน้าแรก</button>
+    <button data-view="quizzes">คลังแบบทดสอบ</button>
+    <button data-view="history">ประวัติสอบ</button>
+    <button data-view="verify">ตรวจสอบเกียรติบัตร</button>
+    <button data-view="account">บัญชีสมาชิก</button>
+    <button data-view="admin" id="adminNav" class="hidden">หลังบ้านแอดมิน</button>
+  </nav>
+</header>
+<main>
+  <div id="globalStatus" class="status">กำลังเริ่มต้นระบบ…</div>
+  <section id="view-home" class="view">
+    <div class="hero">
+      <span class="pill">TCSN Learning</span>
+      <h1>ศูนย์ทดสอบความรู้และเกียรติบัตร</h1>
+      <p>เลือกหลักสูตร ทำแบบทดสอบ ตรวจคะแนน และรับเกียรติบัตรอิเล็กทรอนิกส์เมื่อสอบผ่าน</p>
+      <div class="row"><button class="primary" data-view="quizzes">เลือกแบบทดสอบ</button><button data-view="verify">ตรวจสอบเกียรติบัตร</button></div>
+    </div>
+    <div class="grid">
+      <div class="card"><h3>🧠 คลังแบบทดสอบ</h3><p class="muted">เลือกหัวข้อและหลักสูตรที่เปิดสอบ</p></div>
+      <div class="card"><h3>⏱️ สอบพร้อมจับเวลา</h3><p class="muted">มีตัวเลือก ก ข ค ง และตรวจคะแนนอัตโนมัติ</p></div>
+      <div class="card"><h3>🏅 เกียรติบัตร PDF</h3><p class="muted">สอบผ่านตามเกณฑ์แล้วดาวน์โหลดเกียรติบัตรได้</p></div>
+    </div>
+  </section>
+
+  <section id="view-account" class="view hidden">
+    <div class="card"><h2>บัญชีสมาชิก</h2><p id="accountSummary" class="muted">กรุณาเข้าสู่ระบบเพื่อทำข้อสอบและเก็บประวัติ</p>
+      <div id="authForms" class="grid">
+        <form id="signupForm" class="card"><h3>สมัครสมาชิก</h3><label class="field">ชื่อที่แสดง<input id="signupName" required maxlength="100"></label><label class="field">อีเมล<input id="signupEmail" type="email" required></label><label class="field">รหัสผ่าน (อย่างน้อย 8 ตัว)<input id="signupPassword" type="password" minlength="8" required></label><button class="primary">สมัครสมาชิก</button></form>
+        <form id="loginForm" class="card"><h3>เข้าสู่ระบบ</h3><label class="field">อีเมล<input id="loginEmail" type="email" required></label><label class="field">รหัสผ่าน<input id="loginPassword" type="password" required></label><button class="primary">เข้าสู่ระบบ</button><button type="button" id="resetPassword">รีเซ็ตรหัสผ่าน</button></form>
+      </div>
+      <button id="logoutBtn" class="danger hidden">ออกจากระบบ</button>
+    </div>
+  </section>
+
+  <section id="view-quizzes" class="view hidden">
+    <div class="card"><h2>คลังแบบทดสอบ</h2><p class="muted">เลือกหัวข้อที่ต้องการสอบ หากยังไม่มีหลักสูตร ให้แอดมินสร้างในเมนูหลังบ้าน</p><div id="quizList" class="grid"></div></div>
+  </section>
+
+  <section id="view-exam" class="view hidden">
+    <div class="card"><div class="row" style="justify-content:space-between"><div><h2 id="examTitle">แบบทดสอบ</h2><p id="examMeta" class="muted"></p></div><div class="timer" id="timer">เวลา: --:--</div></div><div id="examQuestions"></div><button id="submitExam" class="primary">ส่งคำตอบและตรวจคะแนน</button><button id="cancelExam">ยกเลิก</button><div id="examStatus" class="status hidden"></div></div>
+  </section>
+
+  <section id="view-result" class="view hidden">
+    <div class="card"><h2>ผลการสอบ</h2><div id="resultContent"></div><div class="row"><button id="downloadCert" class="primary hidden">ดาวน์โหลดเกียรติบัตร PDF</button><button data-view="history">ดูประวัติสอบ</button><button data-view="quizzes">กลับคลังแบบทดสอบ</button></div></div>
+  </section>
+
+  <section id="view-history" class="view hidden">
+    <div class="card"><h2>ประวัติการสอบ</h2><p class="muted">ดูคะแนน ผลสอบ และดาวน์โหลดเกียรติบัตรย้อนหลัง</p><div id="historyList"></div></div>
+  </section>
+
+  <section id="view-verify" class="view hidden">
+    <div class="card"><h2>ตรวจสอบเกียรติบัตร</h2><p class="muted">กรอกรหัสประจำใบเกียรติบัตร</p><form id="verifyForm" class="row"><div class="field"><label for="certCode">รหัสเกียรติบัตร</label><input id="certCode" required placeholder="เช่น TCSN-ABC123"></div><button class="primary">ตรวจสอบ</button></form><div id="verifyResult"></div></div>
+  </section>
+
+  <section id="view-admin" class="view hidden">
+    <div class="card"><h2>ระบบหลังบ้านแอดมิน</h2><p class="muted">สร้างและจัดการหลักสูตร แบบทดสอบ เกณฑ์ผ่าน และเวลาในการสอบ</p>
+      <form id="quizForm">
+        <input id="editQuizId" type="hidden">
+        <div class="row"><label class="field">ชื่อหลักสูตร/แบบทดสอบ<input id="quizTitle" required maxlength="150"></label><label class="field">หมวดหมู่<input id="quizCategory" maxlength="80" placeholder="เช่น Cybersecurity"></label></div>
+        <label class="field">คำอธิบาย<textarea id="quizDescription" maxlength="1000"></textarea></label>
+        <div class="row"><label class="field">คะแนนผ่าน (%)<input id="quizPass" type="number" min="1" max="100" value="80" required></label><label class="field">เวลา (นาที)<input id="quizMinutes" type="number" min="1" max="240" value="20" required></label></div>
+        <label class="field">ข้อความบนเกียรติบัตร<textarea id="certificateText" maxlength="500">ได้ผ่านการทดสอบความรู้ตามหลักสูตรนี้</textarea></label>
+        <h3>คำถาม</h3><p class="muted small">เพิ่มคำถามได้หลายข้อ แต่ละข้อมีตัวเลือก 4 ตัวเลือก ก ข ค ง</p>
+        <div id="questionEditor"></div>
+        <div class="row"><button type="button" id="addQuestion">+ เพิ่มคำถาม</button><button type="submit" class="primary">บันทึกหลักสูตร</button><button type="button" id="clearQuizForm">ล้างฟอร์ม</button></div>
+      </form>
+    </div>
+    <div class="card"><h2>จัดการหลักสูตร</h2><div id="adminQuizList"></div></div>
+    <div class="card"><h2>รายชื่อผู้เข้าสอบและคะแนน</h2><div id="adminResults"></div></div>
+    <div class="card"><h2>ออกแบบเกียรติบัตร</h2><p class="muted">ชื่อหลักสูตรและข้อความเกียรติบัตรกำหนดได้ในฟอร์มหลักสูตร ส่วนชื่อผู้สอบ วันที่ รหัส และ QR จะสร้างให้อัตโนมัติ</p></div>
+  </section>
+</main>
+<footer>TCSN · ระบบแบบทดสอบและเกียรติบัตร · โปรดใช้ข้อมูลจริงอย่างรับผิดชอบ</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Firebase config ของโปรเจกต์ TCSN ที่ผู้ใช้ให้ไว้ก่อนหน้านี้
+const firebaseConfig = {
+  apiKey: "AIzaSyCWldUK5CBgogP-lJATKuB-ASNm-9kbudU",
+  authDomain: "tcsn-kci.firebaseapp.com",
+  projectId: "tcsn-kci",
+  storageBucket: "tcsn-kci.firebasestorage.app",
+  messagingSenderId: "795641510066",
+  appId: "1:795641510066:web:1ac8ff1f257d323970b1ab"
+};
+
+// ใส่ UID ของเจ้าของเว็บจาก Firebase Authentication > Users เพื่อเปิดสิทธิ์แอดมิน
+const ADMIN_UID = "REPLACE_WITH_YOUR_FIREBASE_UID";
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
+let currentUser = null, currentRole = "member", quizzes = [], activeQuiz = null, timerHandle = null, secondsLeft = 0, latestPassedAttempt = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function status(message, type="") { const el=$("globalStatus"); el.textContent=message; el.className="status "+type; }
+function showView(name){document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden")); const el=$("view-"+name); if(el)el.classList.remove("hidden"); document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>showView(b.dataset.view)); if(name==="quizzes")renderQuizList(); if(name==="history")loadHistory(); if(name==="admin")loadAdminData(); window.scrollTo({top:0,behavior:"smooth"});}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+function isAdmin(){return !!currentUser && (currentUser.uid===ADMIN_UID || currentRole==="admin" || currentRole==="president");}
+async function loadRole(){currentRole="member"; if(!currentUser)return; if(currentUser.uid===ADMIN_UID){currentRole="admin";return;} try{const snap=await getDoc(doc(db,"users",currentUser.uid)); if(snap.exists())currentRole=snap.data().role||"member";}catch(e){console.warn(e)}}
+function updateAccountUI(){ $("authForms").classList.toggle("hidden",!!currentUser); $("logoutBtn").classList.toggle("hidden",!currentUser); $("adminNav").classList.toggle("hidden",!isAdmin()); $("accountSummary").textContent=currentUser?`เข้าสู่ระบบ: ${currentUser.displayName||currentUser.email} · สิทธิ์: ${currentRole}`:"กรุณาเข้าสู่ระบบเพื่อทำข้อสอบและเก็บประวัติ"; }
+async function ensureUserProfile(user, displayName){const ref=doc(db,"users",user.uid);const snap=await getDoc(ref);if(!snap.exists())await setDoc(ref,{uid:user.uid,email:user.email||"",displayName:displayName||user.displayName||"",role:"member",createdAt:serverTimestamp()});}
+$("signupForm").addEventListener("submit",async e=>{e.preventDefault();try{const cred=await createUserWithEmailAndPassword(auth,$("signupEmail").value.trim(),$("signupPassword").value);await updateProfile(cred.user,{displayName:$("signupName").value.trim()});await ensureUserProfile(cred.user,$("signupName").value.trim());status("สมัครสมาชิกสำเร็จ","ok");}catch(err){status("สมัครสมาชิกไม่สำเร็จ: "+err.message,"error");}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();try{await signInWithEmailAndPassword(auth,$("loginEmail").value.trim(),$("loginPassword").value);status("เข้าสู่ระบบสำเร็จ","ok");}catch(err){status("เข้าสู่ระบบไม่สำเร็จ: "+err.message,"error");}});
+$("logoutBtn").addEventListener("click",()=>signOut(auth).catch(e=>status(e.message,"error")));
+$("resetPassword").addEventListener("click",async()=>{const email=$("loginEmail").value.trim();if(!email)return status("กรอกอีเมลในช่องเข้าสู่ระบบก่อน","error");try{await sendPasswordResetEmail(auth,email);status("ส่งลิงก์รีเซ็ตรหัสผ่านแล้ว","ok");}catch(e){status(e.message,"error");}});
+onAuthStateChanged(auth,async user=>{currentUser=user;if(user){try{await ensureUserProfile(user);await loadRole();}catch(e){console.warn(e)}}updateAccountUI();await loadQuizzes();status(user?"เชื่อมต่อ TCSN และเข้าสู่ระบบแล้ว":"เชื่อมต่อ TCSN แล้ว · เข้าสู่ระบบเพื่อทำข้อสอบ","ok");});
+
+async function loadQuizzes(){try{const snap=await getDocs(query(collection(db,"quizzes"),orderBy("createdAt","desc")));quizzes=snap.docs.map(d=>({id:d.id,...d.data()}));renderQuizList();}catch(e){console.error(e);quizzes=[];renderQuizList();if(e.code!=="permission-denied")status("โหลดคลังแบบทดสอบไม่ได้: "+e.message,"error");}}
+function renderQuizList(){const box=$("quizList");if(!quizzes.length){box.innerHTML='<div class="card"><h3>ยังไม่มีแบบทดสอบ</h3><p class="muted">เข้าสู่ระบบแอดมิน แล้วสร้างหลักสูตรแรกในเมนู “หลังบ้านแอดมิน”</p></div>';return;}box.innerHTML=quizzes.filter(q=>q.published!==false||isAdmin()).map(q=>`<article class="card"><span class="pill">${esc(q.category||"ทั่วไป")}</span><h3>${esc(q.title)}</h3><p class="muted">${esc(q.description||"")}</p><p>จำนวนข้อ: ${(q.questions||[]).length} · ผ่าน: ${Number(q.passPercent??80)}% · เวลา: ${Number(q.minutes??20)} นาที</p><button class="primary" data-start="${esc(q.id)}" ${!currentUser||q.published===false&&!isAdmin()?"disabled":""}>${currentUser?"เริ่มทำข้อสอบ":"เข้าสู่ระบบเพื่อสอบ"}</button></article>`).join("");box.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>startExam(b.dataset.start));}
+function renderQuestionsEditor(questions=[{}]){$("questionEditor").innerHTML="";questions.forEach(q=>addQuestionEditor(q));}
+function addQuestionEditor(q={}){const index=$("questionEditor").children.length;const div=document.createElement("div");div.className="card";div.dataset.question="1";div.innerHTML=`<div class="row"><h3>ข้อที่ ${index+1}</h3><button type="button" class="danger removeQuestion">ลบข้อนี้</button></div><label class="field">คำถาม<textarea class="qtext" required maxlength="1000">${esc(q.text||"")}</textarea></label><div class="grid">${[0,1,2,3].map((n)=>`<label class="field">ตัวเลือก ${"กขคง"[n]}<input class="qopt" required maxlength="400" value="${esc((q.options||[])[n]||"")}"></label>`).join("")}</div><label class="field">คำตอบที่ถูกต้อง<select class="qcorrect">${[0,1,2,3].map(n=>`<option value="${n}" ${Number(q.correctIndex||0)===n?"selected":""}>${"กขคง"[n]}</option>`).join("")}</select></label>`;$("questionEditor").appendChild(div);div.querySelector(".removeQuestion").onclick=()=>{div.remove();renumberQuestionEditors();};}
+function renumberQuestionEditors(){[...$("questionEditor").children].forEach((el,i)=>el.querySelector("h3").textContent="ข้อที่ "+(i+1));}
+$("addQuestion").onclick=()=>addQuestionEditor();
+$("clearQuizForm").onclick=()=>{$("quizForm").reset();$("editQuizId").value="";renderQuestionsEditor([{}]);};
+renderQuestionsEditor([{}]);
+function collectQuestions(){return [...$("questionEditor").children].map(el=>({text:el.querySelector(".qtext").value.trim(),options:[...el.querySelectorAll(".qopt")].map(x=>x.value.trim()),correctIndex:Number(el.querySelector(".qcorrect").value)}));}
+$("quizForm").addEventListener("submit",async e=>{e.preventDefault();if(!isAdmin())return status("เฉพาะแอดมินเท่านั้นที่สร้างแบบทดสอบได้","error");const qs=collectQuestions();if(!qs.length||qs.some(q=>!q.text||q.options.some(o=>!o)))return status("กรอกคำถามและตัวเลือกให้ครบทุกข้อ","error");const data={title:$("quizTitle").value.trim(),category:$("quizCategory").value.trim(),description:$("quizDescription").value.trim(),passPercent:Number($("quizPass").value),minutes:Number($("quizMinutes").value),certificateText:$("certificateText").value.trim(),questions:qs,published:true,createdBy:currentUser.uid,createdAt:serverTimestamp(),updatedAt:serverTimestamp()};try{const id=$("editQuizId").value;if(id)await updateDoc(doc(db,"quizzes",id),{...data,createdAt:undefined});else await addDoc(collection(db,"quizzes"),data);status("บันทึกหลักสูตรแล้ว","ok");$("quizForm").reset();$("editQuizId").value="";renderQuestionsEditor([{}]);await loadQuizzes();await loadAdminData();}catch(err){status("บันทึกไม่สำเร็จ: "+err.message,"error");}});
+async function startExam(id){if(!currentUser){showView("account");return status("กรุณาเข้าสู่ระบบก่อนเริ่มสอบ","error");}const quiz=quizzes.find(q=>q.id===id);if(!quiz)return; if(!quiz.questions?.length)return status("หลักสูตรนี้ยังไม่มีคำถาม","error");activeQuiz=quiz;secondsLeft=Math.max(60,Number(quiz.minutes||20)*60);$("examTitle").textContent=quiz.title;$("examMeta").textContent=`${quiz.questions.length} ข้อ · เกณฑ์ผ่าน ${quiz.passPercent??80}%`; $("examQuestions").innerHTML=quiz.questions.map((q,i)=>`<div class="question"><h3>${i+1}. ${esc(q.text)}</h3>${q.options.map((o,j)=>`<label class="quiz-option"><input type="radio" name="answer-${i}" value="${j}"><span><b>${"กขคง"[j]}.</b> ${esc(o)}</span></label>`).join("")}</div>`).join("");$("examStatus").classList.add("hidden");$("submitExam").disabled=false;showView("exam");startTimer();}
+function startTimer(){clearInterval(timerHandle);const tick=()=>{const m=Math.floor(secondsLeft/60),s=secondsLeft%60;$("timer").textContent=`เวลา: ${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;if(secondsLeft<=0){clearInterval(timerHandle);submitExam(true);return;}secondsLeft--;};tick();timerHandle=setInterval(tick,1000);}
+$("cancelExam").onclick=()=>{clearInterval(timerHandle);activeQuiz=null;showView("quizzes");};
+$("submitExam").onclick=()=>submitExam(false);
+async function submitExam(auto=false){if(!activeQuiz||!currentUser)return;clearInterval(timerHandle);$("submitExam").disabled=true;let correct=0,answered=0;const answers=activeQuiz.questions.map((q,i)=>{const picked=document.querySelector(`input[name="answer-${i}"]:checked`);const value=picked?Number(picked.value):-1;if(value>=0)answered++;if(value===Number(q.correctIndex))correct++;return value;});const total=activeQuiz.questions.length,percent=Math.round(correct/total*100),passed=percent>=Number(activeQuiz.passPercent??80),certCode=passed?("TCSN-"+crypto.randomUUID().replaceAll("-","").slice(0,12).toUpperCase()):null;const attempt={uid:currentUser.uid,email:currentUser.email||"",displayName:currentUser.displayName||currentUser.email||"ผู้เข้าสอบ",quizId:activeQuiz.id,quizTitle:activeQuiz.title,total,correct,answered,percent,passed,answers,certCode,certificateText:activeQuiz.certificateText||"ได้ผ่านการทดสอบความรู้ตามหลักสูตรนี้",status:"valid",submittedAt:serverTimestamp(),submittedAtISO:new Date().toISOString()};try{const ref=await addDoc(collection(db,"examAttempts"),attempt);latestPassedAttempt=passed?{...attempt,id:ref.id,submittedAtISO:attempt.submittedAtISO}:null;$("resultContent").innerHTML=`<div class="status ${passed?"ok":"error"}"><h3>${passed?"🎉 ยินดีด้วย คุณสอบผ่าน!":"ยังไม่ผ่านเกณฑ์"}</h3><p>คะแนน <b>${correct}/${total} (${percent}%)</b></p><p>เกณฑ์ผ่าน ${Number(activeQuiz.passPercent??80)}% · ตอบแล้ว ${answered}/${total} ข้อ${auto?" · หมดเวลาสอบ":""}</p>${passed?`<p>รหัสเกียรติบัตร: <b>${esc(certCode)}</b></p>`:"<p>คุณสามารถกลับไปทบทวนและสอบใหม่ได้</p>"}</div>`;$("downloadCert").classList.toggle("hidden",!passed);$("downloadCert").onclick=()=>downloadCertificate(latestPassedAttempt);activeQuiz=null;showView("result");await loadHistory();}catch(err){$("submitExam").disabled=false;status("บันทึกผลสอบไม่ได้: "+err.message,"error");}}
+async function loadHistory(){const box=$("historyList");if(!currentUser){box.innerHTML='<p class="muted">กรุณาเข้าสู่ระบบเพื่อดูประวัติการสอบ</p>';return;}try{const snap=await getDocs(query(collection(db,"examAttempts"),where("uid","==",currentUser.uid),orderBy("submittedAtISO","desc"),limit(100)));if(snap.empty){box.innerHTML='<p class="muted">ยังไม่มีประวัติการสอบ</p>';return;}box.innerHTML='<div class="tablewrap"><table><thead><tr><th>หลักสูตร</th><th>คะแนน</th><th>ผลสอบ</th><th>เกียรติบัตร</th></tr></thead><tbody>'+snap.docs.map(d=>{const a=d.data();return `<tr><td>${esc(a.quizTitle)}</td><td>${Number(a.percent)}%</td><td>${a.passed?'<span class="pill">ผ่าน</span>':'ไม่ผ่าน'}</td><td>${a.passed&&a.status!=="revoked"?`<button data-cert="${d.id}">ดาวน์โหลด PDF</button><div class="small muted">${esc(a.certCode||"")}</div>`:a.status==="revoked"?"เพิกถอนแล้ว":"—"}</td></tr>`}).join("")+'</tbody></table></div>';box.querySelectorAll("[data-cert]").forEach(b=>b.onclick=async()=>{const d=await getDoc(doc(db,"examAttempts",b.dataset.cert));if(d.exists())downloadCertificate({id:d.id,...d.data()});});}catch(e){box.innerHTML=`<p class="status error">โหลดประวัติไม่ได้: ${esc(e.message)}<br>หากเกิด index error ให้เปิดลิงก์ที่ Firebase แจ้งเพื่อสร้าง index</p>`;}}
+async function downloadCertificate(a){
+  if(!a || a.status==="revoked") return alert("เกียรติบัตรนี้ถูกเพิกถอนหรือไม่มีข้อมูล");
+  try {
+    const {jsPDF} = await (async()=>{
+      await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+      await loadScript("https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js");
+      return window.jspdf;
+    })();
+    const pdf = new jsPDF({orientation:"landscape", unit:"mm", format:"a4"});
+    const template = await loadImageData("certificate-template.png");
+    pdf.addImage(template, "PNG", 0, 0, 297, 210);
+
+    // Overlay the learner's name and the current issue date on the supplied TCSN certificate template.
+    // The name placeholder area is covered with a soft white panel so the generated name is legible.
+    pdf.setFillColor(255,255,255);
+    pdf.roundedRect(94, 75, 109, 18, 2, 2, "F");
+    pdf.setTextColor(10,10,10);
+    pdf.setFont("helvetica","bold");
+    pdf.setFontSize(21);
+    const learnerName = String(a.displayName || "ผู้เข้าสอบ").slice(0,70);
+    pdf.text(learnerName, 148.5, 87, {align:"center", maxWidth:105});
+
+    const issuedDate = new Date(a.submittedAtISO || Date.now()).toLocaleDateString("th-TH", {year:"numeric",month:"long",day:"numeric"});
+    pdf.setFont("helvetica","normal");
+    pdf.setFontSize(13);
+    pdf.text(issuedDate, 148.5, 151, {align:"center", maxWidth:90});
+
+    // Put certificate ID and a QR code in the lower-right area without covering the signature.
+    const verifyUrl = location.origin + location.pathname + "?verify=" + encodeURIComponent(a.certCode || "");
+    const qrData = await QRCode.toDataURL(verifyUrl, {width:180, margin:1});
+    pdf.addImage(qrData, "PNG", 263, 174, 19, 19);
+    pdf.setFontSize(7);
+    pdf.setTextColor(80,20,20);
+    pdf.text(String(a.certCode || ""), 258, 196, {align:"center", maxWidth:35});
+    pdf.save(`TCSN-Certificate-${a.certCode || "certificate"}.pdf`);
+  } catch(e) {
+    alert("สร้าง PDF ไม่สำเร็จ: " + e.message + " (ตรวจสอบว่าอัปโหลด certificate-template.png ไว้โฟลเดอร์เดียวกับ index.html แล้ว)");
+  }
+}
+function loadImageData(src){
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+      canvas.getContext("2d").drawImage(img,0,0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = ()=>reject(new Error("ไม่พบไฟล์ certificate-template.png"));
+    img.src = src;
+  });
+}
+function loadScript(src){return new Promise((resolve,reject)=>{if([...document.scripts].some(s=>s.src===src))return resolve();const s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error("โหลดไลบรารี PDF/QR ไม่สำเร็จ"));document.head.appendChild(s);});}
+$("verifyForm").addEventListener("submit",async e=>{e.preventDefault();const code=$("certCode").value.trim().toUpperCase();const box=$("verifyResult");box.innerHTML='<div class="status">กำลังตรวจสอบ…</div>';try{const snap=await getDocs(query(collection(db,"examAttempts"),where("certCode","==",code),limit(1)));if(snap.empty){box.innerHTML='<div class="status error">ไม่พบรหัสเกียรติบัตรนี้</div>';return;}const a=snap.docs[0].data();box.innerHTML=`<div class="status ${a.status==="revoked"?"error":"ok"}"><h3>${a.status==="revoked"?"เกียรติบัตรถูกเพิกถอน":a.passed?"เกียรติบัตรถูกต้อง":"ไม่ใช่เกียรติบัตรที่ผ่านเกณฑ์"}</h3><p>ผู้ได้รับ: ${esc(a.displayName)}</p><p>หลักสูตร: ${esc(a.quizTitle)}</p><p>คะแนน: ${Number(a.percent)}%</p><p>รหัส: ${esc(a.certCode)}</p><p>สถานะ: ${esc(a.status||"valid")}</p></div>`;}catch(err){box.innerHTML=`<div class="status error">ตรวจสอบไม่ได้: ${esc(err.message)}</div>`;}});
+async function loadAdminData(){if(!isAdmin()){showView("home");return status("คุณไม่มีสิทธิ์เข้าใช้งานส่วนนี้","error");}const qbox=$("adminQuizList");qbox.innerHTML="กำลังโหลด…";try{await loadQuizzes();qbox.innerHTML=quizzes.length?'<div class="tablewrap"><table><thead><tr><th>หลักสูตร</th><th>ข้อสอบ</th><th>เผยแพร่</th><th>จัดการ</th></tr></thead><tbody>'+quizzes.map(q=>`<tr><td>${esc(q.title)}</td><td>${(q.questions||[]).length}</td><td>${q.published===false?"ปิด":"เปิด"}</td><td><button data-edit="${q.id}">แก้ไข</button> <button data-toggle="${q.id}">${q.published===false?"เผยแพร่":"ปิดสอบ"}</button> <button class="danger" data-delete="${q.id}">ลบ</button></td></tr>`).join("")+'</tbody></table></div>':'<p class="muted">ยังไม่มีหลักสูตร</p>';qbox.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editQuiz(b.dataset.edit));qbox.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=async()=>{const q=quizzes.find(x=>x.id===b.dataset.toggle);await updateDoc(doc(db,"quizzes",q.id),{published:q.published===false,updatedAt:serverTimestamp()});await loadAdminData();});qbox.querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{if(confirm("ยืนยันลบหลักสูตรนี้?")){await deleteDoc(doc(db,"quizzes",b.dataset.delete));await loadAdminData();}});await loadAdminResults();}catch(e){qbox.innerHTML=`<p class="status error">${esc(e.message)}</p>`;}}
+async function editQuiz(id){const q=quizzes.find(x=>x.id===id);if(!q)return;$("editQuizId").value=q.id;$("quizTitle").value=q.title||"";$("quizCategory").value=q.category||"";$("quizDescription").value=q.description||"";$("quizPass").value=q.passPercent??80;$("quizMinutes").value=q.minutes??20;$("certificateText").value=q.certificateText||"";renderQuestionsEditor(q.questions||[{}]);$("quizTitle").scrollIntoView({behavior:"smooth",block:"center"});}
+async function loadAdminResults(){const box=$("adminResults");try{const snap=await getDocs(query(collection(db,"examAttempts"),orderBy("submittedAtISO","desc"),limit(200)));if(snap.empty){box.innerHTML='<p class="muted">ยังไม่มีผู้เข้าสอบ</p>';return;}box.innerHTML='<div class="tablewrap"><table><thead><tr><th>ชื่อ/อีเมล</th><th>หลักสูตร</th><th>คะแนน</th><th>เกียรติบัตร</th><th>จัดการ</th></tr></thead><tbody>'+snap.docs.map(d=>{const a=d.data();return `<tr><td>${esc(a.displayName)}<br><span class="muted small">${esc(a.email)}</span></td><td>${esc(a.quizTitle)}</td><td>${Number(a.percent)}%</td><td>${esc(a.certCode||"—")}<br>${esc(a.status||"")}</td><td>${a.certCode&&a.status!=="revoked"?`<button class="danger" data-revoke="${d.id}">เพิกถอน</button>`:a.status==="revoked"?"เพิกถอนแล้ว":"—"}</td></tr>`}).join("")+'</tbody></table></div>';box.querySelectorAll("[data-revoke]").forEach(b=>b.onclick=async()=>{if(confirm("ยืนยันเพิกถอนเกียรติบัตรนี้?")){await updateDoc(doc(db,"examAttempts",b.dataset.revoke),{status:"revoked",revokedAt:serverTimestamp(),revokedBy:currentUser.uid});await loadAdminResults();}});}catch(e){box.innerHTML=`<p class="status error">${esc(e.message)}</p>`;}}
+const queryCert=new URLSearchParams(location.search).get("verify");if(queryCert){$("certCode").value=queryCert;showView("verify");$("verifyForm").requestSubmit();}
+</script>
+</body>
+</html>
